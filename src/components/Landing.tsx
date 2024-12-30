@@ -1,7 +1,9 @@
 import styled from "styled-components";
-import Title from "./Title";
-import { tablet } from "../../utils/style";
-import About from "./About";
+import Title from "./Title/Title";
+import { tablet } from "../utils/style";
+import About from "./About/About";
+import HowTo from "./HowTo/HowTo";
+import Data from "./Data/Data";
 
 const LandingContainer = styled.div`
   position: relative;
@@ -28,6 +30,8 @@ export default function Landing(): JSX.Element {
     <LandingContainer>
       <Title />
       <About />
+      <Data />
+      <HowTo />
     </LandingContainer>
   );
 }

@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@p5-wrapper/react": "^4.4.2",
+    "d3": "^7.9.0",
     "p5": "^1.11.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -17,6 +19,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@types/d3": "^7.4.3",
+    "@types/d3-scale": "^4.0.8",
     "@types/p5": "^1.7.6",
     "@types/react": "^18.3.17",
     "@types/react-dom": "^18.3.5",
