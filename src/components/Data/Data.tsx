@@ -32,18 +32,18 @@ export default function Data(): JSX.Element {
       <Description>
         <ChapterTitle>Data</ChapterTitle>
         <ChapterText>
-          This project was done as part of the Generative Art Lab exhibition at
-          ModuLabs in 2023. Based on Seoul's living population data, I
-          visualized the estimated number of people in 26 districts (gu) on a
-          monthly and hourly basis.
+          Seoul's Living Population data is an estimated dataset of the
+          population present in specific areas and time points in Seoul, based
+          on mobile communication data (LTE) and utilizing public transportation
+          usage statistics, resident registration population statistics,
+          building databases and etc.
         </ChapterText>
         <ChapterTextKR>
-          이 프로젝트는 2023년에 진행했던 모두의 연구소 Generative Art 전시의
-          일환으로 진행되었다. 서울시 생활인구 데이터를 바탕으로 26개의 자치구의
-          생활인구를 월별, 시간별로 표현하였다.
+          서울시 생활인구는 모바일 통신 데이터 (LTE)를 기반으로 대중교통
+          이용통계, 주민등록인구통계, 건물 DB 등을 활용하여 서울의 특정지역,
+          시점에 존재하는 인구를 추정한 데이터입니다.
         </ChapterTextKR>
       </Description>
-      <Sample />
     </Container>
   );
 }

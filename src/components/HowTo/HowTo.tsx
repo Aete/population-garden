@@ -58,7 +58,6 @@ export default function HowTo(): JSX.Element {
           생활인구를 월별, 시간별로 표현하였다.
         </ChapterTextKR>
       </Description>
-      <Sample />
     </Container>
   );
 }
