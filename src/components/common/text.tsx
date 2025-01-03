@@ -7,7 +7,7 @@ export const ChapterTitle = styled.h2`
   line-height: 110%;
   letter-spacing: 0.45em;
   color: #ffffff;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
 
   @media (max-width: ${tablet}px) {
     font-size: 36px;
