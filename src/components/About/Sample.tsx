@@ -46,7 +46,9 @@ const sketch: Sketch<SampleSketchProps> = (
               x,
               y,
               d.data as [number, number, number, number][],
-              guName
+              guName,
+              false,
+              0.00008
             );
           }
         });
