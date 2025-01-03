@@ -24,7 +24,7 @@ interface FlowerData {
 const sketch: Sketch<SampleSketchProps> = (
   p: P5CanvasInstance<SampleSketchProps>
 ) => {
-  const flowers: FlowerData = {};
+  let flowers: FlowerData = {};
   p.setup = () => {
     p.createCanvas(0, 0);
     p.background("#212121");
@@ -33,21 +33,27 @@ const sketch: Sketch<SampleSketchProps> = (
   p.updateWithProps = ({ dimension }: SampleSketchProps) => {
     const { width, height } = dimension;
     if (width && height) {
+      const numColumn: number = width > 600 ? 5 : 3;
+      let numFlowers = innerWidth > tablet ? numColumn * 5 : numColumn;
+      flowers = {};
       p.resizeCanvas(width, height);
       p.background("#212121");
       data
         .filter((d) => d.month === 202211)
+        .slice(0, numFlowers)
         .forEach((d, i) => {
           const guName = guCodeArray.find((gu) => gu.code === d.gu)?.nameKR;
-          const x = (i % 5) * (width / 5) + width / 10;
-          const y = Math.floor(i / 5) * ((height - 200) / 5) + height / 10 + 75;
+          const x =
+            (i % numColumn) * (width / numColumn) + width / (numColumn * 2);
+          const y =
+            Math.floor(i / numColumn) * ((height - 200) / 5) + height / 10 + 75;
           if (guName) {
             flowers[guName] = new Flower(
               x,
               y,
               d.data as [number, number, number, number][],
               guName,
-              false,
+              true,
               0.00008
             );
           }
@@ -69,10 +75,11 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  @media (max-width: ${tablet}px) {
-    display: none;
-  }
   color: #ffffff;
+  @media screen and (max-width: ${tablet}px) {
+    width: 100%;
+    height: 200px;
+  }
 `;
 
 export default function Sample(): JSX.Element {
@@ -87,7 +94,7 @@ export default function Sample(): JSX.Element {
       if (containerRef.current) {
         setDimension({
           width: containerRef.current.offsetWidth,
-          height: window.innerHeight,
+          height: innerWidth > tablet ? innerHeight : 180,
         });
       }
     };
