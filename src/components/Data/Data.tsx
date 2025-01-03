@@ -2,8 +2,6 @@ import styled from "styled-components";
 import { tablet } from "../../utils/style";
 import { ChapterTitle, ChapterText, ChapterTextKR } from "../common/text";
 
-import Sample from "../About/Sample";
-
 const Description = styled.div`
   grid-column: 1 / span 5;
   height: 100vh;
