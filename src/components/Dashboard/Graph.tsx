@@ -1,6 +1,6 @@
 import { ReactP5Wrapper, P5CanvasInstance, Sketch } from "@p5-wrapper/react";
 import styled from "styled-components";
-import Flower from "../Flower/Flower";
+import Flower from "../common/Flower/Flower";
 import data from "../../utils/2022_monthly.json";
 import { guCodeArray } from "../../utils/metadata";
 import { useEffect, useRef, useState } from "react";

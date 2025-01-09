@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import { tablet } from "../../utils/style";
 import { ChapterText, ChapterTextKR } from "../common/text";
-
-import Sample from "../About/Sample";
+import legendVideo from "../../utils/legend.mp4";
 
 const Container = styled.div`
   height: 100vh;
@@ -10,6 +9,13 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 20px;
+
+  @media (max-width: ${tablet}px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const Description = styled.div`
@@ -26,7 +32,7 @@ const Description = styled.div`
   }
 `;
 
-export const ChapterTitle = styled.h2`
+const ChapterTitle = styled.h2`
   font-weight: 400;
   font-size: 64px;
   line-height: 110%;
@@ -38,6 +44,27 @@ export const ChapterTitle = styled.h2`
     font-size: 24px;
     text-align: center;
     margin-bottom: 30px;
+  }
+`;
+
+const LegendContainer = styled.div`
+  grid-column: 7 / span 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+
+  @media screen and (max-width: ${tablet}px) {
+    width: 100%;
+  }
+`;
+
+const LegendVideo = styled.video`
+  width: 90%;
+
+  @media (max-width: ${tablet}px) {
+    width: 80%;
+    margin-bottom: 100px;
   }
 `;
 
@@ -58,6 +85,9 @@ export default function HowTo(): JSX.Element {
           생활인구를 월별, 시간별로 표현하였다.
         </ChapterTextKR>
       </Description>
+      <LegendContainer>
+        <LegendVideo src={legendVideo} autoPlay loop muted />
+      </LegendContainer>
     </Container>
   );
 }

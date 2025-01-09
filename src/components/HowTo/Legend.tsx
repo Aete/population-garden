@@ -2,10 +2,6 @@ import { ReactP5Wrapper, P5CanvasInstance, Sketch } from "@p5-wrapper/react";
 import styled from "styled-components";
 import { tablet } from "../../utils/style";
 import { useState, useEffect, useRef } from "react";
-import data from "../../utils/2022_monthly.json";
-import { guCodeArray } from "../../utils/metadata";
-
-import Flower from "../common/Flower/Flower";
 
 interface Demension {
   width: number;
@@ -17,56 +13,37 @@ interface SampleSketchProps {
   [key: string]: any;
 }
 
-interface FlowerData {
-  [key: string]: Flower;
-}
-
 const sketch: Sketch<SampleSketchProps> = (
   p: P5CanvasInstance<SampleSketchProps>
 ) => {
-  let flowers: FlowerData = {};
   p.setup = () => {
     p.createCanvas(0, 0);
     p.background("#212121");
+    p.frameRate(60);
   };
 
   p.updateWithProps = ({ dimension }: SampleSketchProps) => {
     const { width, height } = dimension;
-    if (width && height) {
-      const numColumn: number = width > 600 ? 5 : 3;
-      let numFlowers = innerWidth > tablet ? numColumn * 5 : numColumn;
-      flowers = {};
-      p.resizeCanvas(width, height);
-      p.background("#212121");
-      data
-        .filter((d) => d.month === 202211)
-        .slice(0, numFlowers)
-        .forEach((d, i) => {
-          const guName = guCodeArray.find((gu) => gu.code === d.gu)?.nameKR;
-          const x =
-            (i % numColumn) * (width / numColumn) + width / (numColumn * 2);
-          const y =
-            Math.floor(i / numColumn) * ((height - 200) / 5) + height / 10 + 75;
-          if (guName) {
-            flowers[guName] = new Flower(
-              x,
-              y,
-              d.data as [number, number, number, number][],
-              guName,
-              true,
-              0.00008
-            );
-          }
-        });
-    }
-    for (const key in flowers) {
-      flowers[key].display(p as P5CanvasInstance);
-    }
-
-    p.noLoop();
+    p.resizeCanvas(width, height);
   };
 
-  p.draw = () => {};
+  p.draw = () => {
+    p.background("#212121");
+    p.fill("#ffffff");
+    const centerX = p.width / 2;
+    const centerY = p.height / 2;
+    const targetX = centerX + 100;
+    const targetY = centerY + 100;
+    const progress = (p.frameCount % 20) / 20; // progress from 0 to 1 over 60 frames
+    p.stroke("#ffffff");
+    p.strokeWeight(2);
+    p.line(
+      centerX,
+      centerY,
+      centerX + progress * 100,
+      centerY + progress * 100
+    );
+  };
 };
 
 const Container = styled.div`
