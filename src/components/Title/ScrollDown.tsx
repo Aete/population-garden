@@ -37,6 +37,10 @@ const ScrollDownContainer = styled.div`
     height: 40px;
     border-radius: 20px;
   }
+
+  @media (max-height: 400px) {
+    bottom: 50px;
+  }
 `;
 
 const Arrow = styled.span`

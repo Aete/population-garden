@@ -4,7 +4,6 @@ import { ChapterTitle, ChapterText, ChapterTextKR } from "../common/text";
 
 const Description = styled.div`
   grid-column: 1 / span 5;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -17,7 +16,7 @@ const Description = styled.div`
 `;
 
 const Container = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(12, 1fr);

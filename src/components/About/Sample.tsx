@@ -79,6 +79,8 @@ const Container = styled.div`
   @media screen and (max-width: ${tablet}px) {
     width: 100%;
     height: 200px;
+    margin-top: 20px;
+    margin-bottom: 40px;
   }
 `;
 

@@ -4,11 +4,15 @@ import ScrollDown from "./ScrollDown";
 
 const Container = styled.div`
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: ${tablet}px) {
+    margin-bottom: 80px;
+  }
 `;
 
 const PageTitle = styled.h1`

@@ -44,3 +44,65 @@ export const ChapterTextKR = styled.p`
     text-align: center;
   }
 `;
+
+export const ChapterTextUL = styled.ul`
+  list-style-type: disc;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 160%;
+  letter-spacing: 0.05em;
+  color: #eee;
+  margin-left: 20px;
+  width: 100%;
+
+  & > li {
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: ${tablet}px) {
+    font-size: 17px;
+    margin-left: 40px;
+  }
+`;
+
+export const ChapterTextULSmall = styled.ul`
+  list-style-type: disc;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 200%;
+  letter-spacing: 0.05em;
+  color: #eee;
+  margin-left: 20px;
+  margin-bottom: 5px;
+
+  @media (max-width: ${tablet}px) {
+    font-size: 14px;
+  }
+`;
+
+export const BoldText = styled.span`
+  font-weight: 500;
+`;
+
+export const ChapterTextULKR = styled.ul`
+  list-style-type: disc;
+  width: 100%;
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 160%;
+  letter-spacing: 0.05em;
+  color: #eee;
+  margin-top: 25px;
+  word-break: keep-all;
+  margin-left: 20px;
+
+  & > li {
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: ${tablet}px) {
+    font-size: 17px;
+    margin-left: 40px;
+  }
+`;

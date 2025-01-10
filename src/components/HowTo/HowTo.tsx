@@ -1,10 +1,16 @@
 import styled from "styled-components";
 import { tablet } from "../../utils/style";
-import { ChapterText, ChapterTextKR } from "../common/text";
+import {
+  BoldText,
+  ChapterTextUL,
+  ChapterTextULKR,
+  ChapterTextULSmall,
+} from "../common/text";
 import legendVideo from "../../utils/legend.mp4";
+import { useEffect, useState } from "react";
 
 const Container = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -20,7 +26,7 @@ const Container = styled.div`
 
 const Description = styled.div`
   grid-column: 1 / span 5;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -29,6 +35,7 @@ const Description = styled.div`
   @media (max-width: ${tablet}px) {
     grid-column: span 12;
     align-items: center;
+    margin-bottom: 100px;
   }
 `;
 
@@ -41,9 +48,9 @@ const ChapterTitle = styled.h2`
   margin-bottom: 60px;
 
   @media (max-width: ${tablet}px) {
-    font-size: 24px;
+    font-size: 36px;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -63,31 +70,87 @@ const LegendVideo = styled.video`
   width: 90%;
 
   @media (max-width: ${tablet}px) {
-    width: 80%;
-    margin-bottom: 100px;
+    margin-bottom: 40px;
   }
 `;
 
 export default function HowTo(): JSX.Element {
+  const [isTabletOrSmaller, setIsTabletOrSmaller] = useState(
+    window.innerWidth <= tablet
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsTabletOrSmaller(window.innerWidth <= tablet);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  if (!isTabletOrSmaller) {
+    return (
+      <Container>
+        <Description>
+          <ChapterTitle>How to read?</ChapterTitle>
+          <HowToText />
+        </Description>
+        <LegendContainer>
+          <LegendVideo src={legendVideo} autoPlay loop muted />
+        </LegendContainer>
+      </Container>
+    );
+  } else {
+    return (
+      <Container>
+        <Description>
+          <ChapterTitle>How to read?</ChapterTitle>
+          <LegendContainer>
+            <LegendVideo src={legendVideo} autoPlay loop muted />
+          </LegendContainer>
+          <HowToText />
+        </Description>
+      </Container>
+    );
+  }
+}
+
+function HowToText(): JSX.Element {
   return (
-    <Container>
-      <Description>
-        <ChapterTitle>How to read?</ChapterTitle>
-        <ChapterText>
-          This project was done as part of the Generative Art Lab exhibition at
-          ModuLabs in 2023. Based on Seoul's living population data, I
-          visualized the estimated number of people in 26 districts (gu) on a
-          monthly and hourly basis.
-        </ChapterText>
-        <ChapterTextKR>
-          이 프로젝트는 2023년에 진행했던 모두의 연구소 Generative Art 전시의
-          일환으로 진행되었다. 서울시 생활인구 데이터를 바탕으로 26개의 자치구의
-          생활인구를 월별, 시간별로 표현하였다.
-        </ChapterTextKR>
-      </Description>
-      <LegendContainer>
-        <LegendVideo src={legendVideo} autoPlay loop muted />
-      </LegendContainer>
-    </Container>
+    <>
+      <ChapterTextUL>
+        <li>
+          <BoldText>Angle</BoldText>: hour of day (0 ~ 23){" "}
+        </li>
+        <li>
+          <BoldText>Radius</BoldText>: monthly and hourly population in the
+          districts (gu)
+          <ChapterTextULSmall>
+            <li> inner grid circle: 250,000</li>
+            <li> outer grid circle: 500,000</li>
+          </ChapterTextULSmall>{" "}
+        </li>
+        <li>
+          <BoldText>Color</BoldText>: % of female
+        </li>
+      </ChapterTextUL>
+      <ChapterTextULKR>
+        <li>
+          <BoldText>각도</BoldText>: 시간대 (0 ~ 23){" "}
+        </li>
+        <li>
+          <BoldText>길이</BoldText>: 자치구의 월별, 시간별 인구수
+          <ChapterTextULSmall>
+            <li> 안쪽 원형 눈금: 250,000</li>
+            <li> 바깥쪽 원형 눈금: 500,000</li>
+          </ChapterTextULSmall>{" "}
+        </li>
+        <li>
+          <BoldText>Color</BoldText>: % of female
+        </li>
+      </ChapterTextULKR>
+    </>
   );
 }

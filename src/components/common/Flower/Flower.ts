@@ -26,8 +26,9 @@ export default class Flower {
 
   display(p: P5CanvasInstance): void {
     this.drawGrid(p);
-    this.drawPetal(p);
     this.drawEdge(p);
+    this.drawPetal(p);
+
     this.textRender && this.drawText(p);
   }
 
@@ -77,7 +78,11 @@ export default class Flower {
       p.strokeWeight(3);
       p.stroke(scaledColor);
       p.line(0, 0, scaledPop, 0);
+
       p.noStroke();
+      p.fill(scaledColor);
+      p.ellipse(scaledPop, 0, 5, 5);
+
       p.pop();
     });
   }
