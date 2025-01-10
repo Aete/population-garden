@@ -216,10 +216,7 @@ export default function Graph({ position, isRender }: GraphProps): JSX.Element {
       if (containerRef.current) {
         setDimension({
           width: containerRef.current.offsetWidth,
-          height:
-            window.innerWidth < tablet
-              ? window.innerHeight * 0.8
-              : window.innerHeight,
+          height: window.innerHeight,
         });
       }
     };
