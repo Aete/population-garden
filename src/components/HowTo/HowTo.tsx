@@ -7,7 +7,6 @@ import {
   ChapterTextULSmall,
 } from "../common/text";
 import legendVideo from "../../utils/legend.mp4";
-import { useEffect, useState } from "react";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -73,23 +72,10 @@ const LegendVideo = styled.video`
     margin-bottom: 40px;
   }
 `;
-
-export default function HowTo(): JSX.Element {
-  const [isTabletOrSmaller, setIsTabletOrSmaller] = useState(
-    window.innerWidth <= tablet
-  );
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsTabletOrSmaller(window.innerWidth <= tablet);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
+interface HowToProps {
+  isTabletOrSmaller: boolean;
+}
+export default function HowTo({ isTabletOrSmaller }: HowToProps): JSX.Element {
   if (!isTabletOrSmaller) {
     return (
       <Container>
@@ -98,7 +84,7 @@ export default function HowTo(): JSX.Element {
           <HowToText />
         </Description>
         <LegendContainer>
-          <LegendVideo src={legendVideo} autoPlay loop muted />
+          <LegendVideo src={legendVideo} muted autoPlay loop />
         </LegendContainer>
       </Container>
     );
@@ -108,7 +94,7 @@ export default function HowTo(): JSX.Element {
         <Description>
           <ChapterTitle>How to read?</ChapterTitle>
           <LegendContainer>
-            <LegendVideo src={legendVideo} autoPlay loop muted />
+            <LegendVideo src={legendVideo} muted autoPlay loop />
           </LegendContainer>
           <HowToText />
         </Description>
@@ -148,7 +134,7 @@ function HowToText(): JSX.Element {
           </ChapterTextULSmall>{" "}
         </li>
         <li>
-          <BoldText>Color</BoldText>: % of female
+          <BoldText>색</BoldText>: 여성 비율 (%)
         </li>
       </ChapterTextULKR>
     </>

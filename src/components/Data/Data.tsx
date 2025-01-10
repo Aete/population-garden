@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { tablet } from "../../utils/style";
 import { ChapterTitle, ChapterText, ChapterTextKR } from "../common/text";
 import Table from "./Table";
-import { useEffect, useState } from "react";
 
 const Description = styled.div`
   grid-column: 1 / span 5;
@@ -25,21 +24,10 @@ const Container = styled.div`
   gap: 20px;
 `;
 
-export default function Data(): JSX.Element {
-  const [isTabletOrSmaller, setIsTabletOrSmaller] = useState(
-    window.innerWidth <= tablet
-  );
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsTabletOrSmaller(window.innerWidth <= tablet);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+interface DataProps {
+  isTabletOrSmaller: boolean;
+}
+export default function Data({ isTabletOrSmaller }: DataProps): JSX.Element {
   if (isTabletOrSmaller) {
     return (
       <Container>

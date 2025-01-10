@@ -27,7 +27,7 @@ const sketch: Sketch<SampleSketchProps> = (
 ) => {
   const flowers: FlowerData = {};
   const targetPosition: Position = { x: 0, y: 0 };
-  const currentPos: Position = { x: 0, y: 0 };
+  const currentPos: Position = { x: -1, y: -1 };
   const scales = {
     large: {
       scale: 0.00008, // scale of the flower
@@ -104,9 +104,9 @@ const sketch: Sketch<SampleSketchProps> = (
   };
 
   p.draw = () => {
-    p.background("#212121");
     const { x, y } = currentPos;
     const { x: targetX, y: targetY } = targetPosition;
+    p.background("#212121");
     const { hGap, vGap, hStart, vStart, vPad, hPad, vAxis, hAxis } =
       p.width > threshold ? scales.large : scales.small;
     p.push();
@@ -126,9 +126,8 @@ const sketch: Sketch<SampleSketchProps> = (
     for (const key in flowers) {
       const startMonth = 202201 - targetX;
       const startGuIndex = -1 * targetY;
-      const guIndex = guCodeArray.findIndex((gu) => gu.nameKR === key);
       flowers[key].forEach((f) => {
-        if (Math.abs(startGuIndex - guIndex) > flowerCount.y + 1) {
+        if (Math.abs(startGuIndex - f.guIndex) > flowerCount.y + 1) {
           return;
         }
         if (Math.abs(startMonth - f.month) < flowerCount.x + 1) {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import Graph from "./Graph";
@@ -95,12 +95,42 @@ const RightButton = styled(CornerButton)`
 
 export default function Dashboard(): JSX.Element {
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
+  const [isTitleVisible, setIsTitleVisible] = useState(false);
+  const titleRef = useRef<HTMLDivElement>(null);
+
   const handleMove = (x: number, y: number) => {
     setPosition({ x: position.x + x, y: position.y + y });
   };
+
+  useEffect(() => {
+    const throttle = (func: () => void, limit: number) => {
+      let inThrottle: boolean;
+      return function () {
+        if (!inThrottle) {
+          func();
+          inThrottle = true;
+          setTimeout(() => (inThrottle = false), limit);
+        }
+      };
+    };
+
+    const handleScroll = throttle(() => {
+      if (titleRef.current) {
+        const rect = titleRef.current.getBoundingClientRect();
+        setIsTitleVisible(rect.top <= window.innerHeight * 0.25);
+      }
+    }, 200);
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <Container>
-      <ChapterTitle style={{ letterSpacing: "0.25em" }}>
+      <ChapterTitle ref={titleRef} style={{ letterSpacing: "0.25em" }}>
         Visualization
       </ChapterTitle>
       <ChapterText>Click arrows to navigate</ChapterText>
@@ -126,7 +156,7 @@ export default function Dashboard(): JSX.Element {
             <path d="M22 12l-10 10v-6h-10v-8h10v-6z" />
           </svg>
         </RightButton>
-        <Graph position={position} />
+        {isTitleVisible && <Graph position={position} />}
       </Container>
     </Container>
   );

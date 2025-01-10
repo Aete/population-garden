@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { tablet } from "../../utils/style";
 import { ChapterTitle, ChapterText, ChapterTextKR } from "../common/text";
@@ -34,23 +33,10 @@ const Container = styled.div`
     align-items: center;
   }
 `;
-
-export default function About(): JSX.Element {
-  const [isTabletOrSmaller, setIsTabletOrSmaller] = useState(
-    window.innerWidth <= tablet
-  );
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsTabletOrSmaller(window.innerWidth <= tablet);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
+interface AboutProps {
+  isTabletOrSmaller: boolean;
+}
+export default function About({ isTabletOrSmaller }: AboutProps): JSX.Element {
   if (isTabletOrSmaller) {
     return (
       <Container>

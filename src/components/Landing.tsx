@@ -5,6 +5,7 @@ import About from "./About/About";
 import HowTo from "./HowTo/HowTo";
 import Data from "./Data/Data";
 import Dashboard from "./Dashboard/Dashboard";
+import { useEffect, useState } from "react";
 
 const LandingContainer = styled.div`
   position: relative;
@@ -27,12 +28,27 @@ const LandingContainer = styled.div`
 `;
 
 export default function Landing(): JSX.Element {
+  const [isTabletOrSmaller, setIsTabletOrSmaller] = useState(
+    window.innerWidth <= tablet
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsTabletOrSmaller(window.innerWidth <= tablet);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <LandingContainer>
       <Title />
-      <About />
-      <Data />
-      <HowTo />
+      <About isTabletOrSmaller={isTabletOrSmaller} />
+      <Data isTabletOrSmaller={isTabletOrSmaller} />
+      <HowTo isTabletOrSmaller={isTabletOrSmaller} />
       <Dashboard />
     </LandingContainer>
   );

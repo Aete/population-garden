@@ -1,15 +1,15 @@
 import styled, { keyframes } from "styled-components";
 import { tablet } from "../../utils/style";
 
-const bounce = keyframes`
-  0%, 20%, 50%, 80%, 100% {
+const scrollAnimation = keyframes`
+  0% {
     transform: translateY(0);
   }
-  40% {
-    transform: translateY(10px);
-  }
-  60% {
+  50% {
     transform: translateY(5px);
+  }
+  100% {
+    transform: translateY(0);
   }
 `;
 
@@ -26,7 +26,7 @@ const ScrollDownContainer = styled.div`
   align-items: center;
   justify-content: center;
 
-  animation: ${bounce} 2s infinite;
+  animation: ${scrollAnimation} 2s infinite;
 
   border: 1px solid #ffffff;
   border-radius: 25px;
