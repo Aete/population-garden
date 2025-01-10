@@ -55,6 +55,11 @@ const sketch: Sketch<SampleSketchProps> = (
 
   const threshold = 800;
 
+  const flowerCount = {
+    x: 0,
+    y: 0,
+  };
+
   p.setup = () => {
     p.createCanvas(0, 0);
     p.background("#212121");
@@ -65,6 +70,10 @@ const sketch: Sketch<SampleSketchProps> = (
     const { x, y } = position;
     if (width && height) {
       p.resizeCanvas(width, height);
+      const { hGap, vGap, hStart, vStart } =
+        width > threshold ? scales.large : scales.small;
+      flowerCount.x = Math.floor(width / hGap);
+      flowerCount.y = Math.floor(height / vGap);
       guCodeArray.forEach((gu) => {
         flowers[gu.nameKR] = [];
       });
@@ -72,8 +81,6 @@ const sketch: Sketch<SampleSketchProps> = (
       data.forEach((d) => {
         const guName = guCodeArray.find((gu) => gu.code === d.gu)?.nameKR;
         const guIndex = guCodeArray.findIndex((gu) => gu.code === d.gu);
-        const { hGap, vGap, hStart, vStart } =
-          width > threshold ? scales.large : scales.small;
         const x = (d.month - 202201) * hGap + hStart + hGap / 2;
         const y = Math.floor(guIndex) * vGap + vStart;
         if (guName) {
@@ -84,7 +91,9 @@ const sketch: Sketch<SampleSketchProps> = (
               d.data as [number, number, number, number][],
               guName,
               false,
-              width > tablet ? scales.large.scale : scales.small.scale
+              width > tablet ? scales.large.scale : scales.small.scale,
+              d.month,
+              guIndex
             )
           );
         }
@@ -115,7 +124,17 @@ const sketch: Sketch<SampleSketchProps> = (
     }
     // draw the flowers
     for (const key in flowers) {
-      flowers[key].forEach((f) => f.display(p as P5CanvasInstance));
+      const startMonth = 202201 - targetX;
+      const startGuIndex = -1 * targetY;
+      const guIndex = guCodeArray.findIndex((gu) => gu.nameKR === key);
+      flowers[key].forEach((f) => {
+        if (Math.abs(startGuIndex - guIndex) > flowerCount.y + 1) {
+          return;
+        }
+        if (Math.abs(startMonth - f.month) < flowerCount.x + 1) {
+          f.display(p as P5CanvasInstance);
+        }
+      });
     }
     p.pop();
 

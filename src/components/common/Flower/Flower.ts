@@ -17,7 +17,9 @@ export default class Flower {
     public data: HourlyPopulation[],
     public gu: string,
     public textRender: boolean = true,
-    public scale: number = 0.00008
+    public scale: number = 0.00008,
+    public month: number = -1, // -1 for null value
+    public guIndex: number = -1
   ) {}
 
   private rScale(d: number): number {
