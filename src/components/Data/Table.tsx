@@ -13,8 +13,7 @@ const TableContainer = styled.div`
   justify-content: center;
 
   @media screen and (max-width: ${tablet}px) {
-    width: 90%;
-    margin: 40px auto;
+    display: none;
   }
 `;
 

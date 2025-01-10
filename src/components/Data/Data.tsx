@@ -13,6 +13,7 @@ const Description = styled.div`
   @media (max-width: ${tablet}px) {
     grid-column: span 12;
     align-items: center;
+    width: 90%;
   }
 `;
 
@@ -22,6 +23,14 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 20px;
+
+  @media (max-width: ${tablet}px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 100px;
+  }
 `;
 
 interface DataProps {

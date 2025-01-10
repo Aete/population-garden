@@ -117,7 +117,7 @@ export default function Dashboard(): JSX.Element {
     const handleScroll = throttle(() => {
       if (titleRef.current) {
         const rect = titleRef.current.getBoundingClientRect();
-        setIsTitleVisible(rect.top <= window.innerHeight * 0.25);
+        setIsTitleVisible(rect.top <= window.innerHeight * 0.5);
       }
     }, 200);
 
@@ -129,12 +129,12 @@ export default function Dashboard(): JSX.Element {
   }, []);
 
   return (
-    <Container>
-      <ChapterTitle ref={titleRef} style={{ letterSpacing: "0.25em" }}>
+    <Container ref={titleRef}>
+      <ChapterTitle style={{ letterSpacing: "0.25em" }}>
         Visualization
       </ChapterTitle>
       <ChapterText>Click arrows to navigate</ChapterText>
-      <ChapterTextKR>화살표를 눌러 </ChapterTextKR>
+      <ChapterTextKR>화살표를 눌러 대시보드를 움직여보세요</ChapterTextKR>
       <Container>
         <TopButton onClick={() => handleMove(0, 1)}>
           <svg viewBox="0 0 24 24">
@@ -156,7 +156,7 @@ export default function Dashboard(): JSX.Element {
             <path d="M22 12l-10 10v-6h-10v-8h10v-6z" />
           </svg>
         </RightButton>
-        {isTitleVisible && <Graph position={position} />}
+        <Graph position={position} isRender={isTitleVisible} />
       </Container>
     </Container>
   );

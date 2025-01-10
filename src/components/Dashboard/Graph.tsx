@@ -15,6 +15,7 @@ interface Demension {
 interface SampleSketchProps {
   dimension: Demension;
   position: Position;
+  isRender: boolean;
   [key: string]: any;
 }
 
@@ -185,6 +186,7 @@ const sketch: Sketch<SampleSketchProps> = (
 
 interface GraphProps {
   position: Position;
+  isRender: boolean;
 }
 
 const Container = styled.div`
@@ -202,7 +204,7 @@ const Container = styled.div`
   }
 `;
 
-export default function Graph({ position }: GraphProps): JSX.Element {
+export default function Graph({ position, isRender }: GraphProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimension, setDimension] = useState<Demension>({
     width: 0,
@@ -214,7 +216,10 @@ export default function Graph({ position }: GraphProps): JSX.Element {
       if (containerRef.current) {
         setDimension({
           width: containerRef.current.offsetWidth,
-          height: window.innerHeight,
+          height:
+            window.innerWidth < tablet
+              ? window.innerHeight * 0.8
+              : window.innerHeight,
         });
       }
     };
@@ -229,11 +234,14 @@ export default function Graph({ position }: GraphProps): JSX.Element {
   }, [containerRef.current]);
   return (
     <Container ref={containerRef}>
-      <ReactP5Wrapper
-        sketch={sketch}
-        dimension={dimension}
-        position={position}
-      />
+      {isRender && (
+        <ReactP5Wrapper
+          sketch={sketch}
+          dimension={dimension}
+          position={position}
+          isRender={isRender}
+        />
+      )}
     </Container>
   );
 }

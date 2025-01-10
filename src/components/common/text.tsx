@@ -12,7 +12,7 @@ export const ChapterTitle = styled.h2`
   @media (max-width: ${tablet}px) {
     font-size: 36px;
     text-align: center;
-    margin-bottom: 0;
+    margin-bottom: 30px;
   }
 `;
 
