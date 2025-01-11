@@ -23,12 +23,22 @@ interface FlowerData {
   [key: string]: Flower[];
 }
 
+interface Selection {
+  gu: string;
+  month: number;
+}
+
 const sketch: Sketch<SampleSketchProps> = (
   p: P5CanvasInstance<SampleSketchProps>
 ) => {
   const flowers: FlowerData = {};
   const targetPosition: Position = { x: 0, y: 0 };
   const currentPos: Position = { x: -1, y: -1 };
+  const currentSelection: Selection = {
+    gu: "",
+    month: -1,
+  };
+
   const scales = {
     large: {
       scale: 0.00008, // scale of the flower
@@ -160,16 +170,28 @@ const sketch: Sketch<SampleSketchProps> = (
 
     for (let i = 0; i < 12; i++) {
       const hPosition = i * hGap + hStart + hGap / 2;
-      p.text(`${i + 202201}`, hPosition, vAxis);
+      const month = 202201 + i;
+      if (month === currentSelection.month) {
+        p.fill("#fff");
+      } else {
+        p.fill("#aaa");
+      }
+      p.text(month, hPosition, vAxis);
     }
     p.pop();
+
     // draw the axis anotation - gu
     p.push();
     p.translate(0, y * vGap);
-    p.fill("#aaa");
     p.textSize(13);
     p.textAlign(p.RIGHT, p.CENTER);
     for (let i = 0; i < 25; i++) {
+      const guName = guCodeArray[i]?.nameKR;
+      if (guName === currentSelection.gu) {
+        p.fill("#fff");
+      } else {
+        p.fill("#aaa");
+      }
       p.text(guCodeArray[i].nameKR, hAxis, i * vGap + vStart);
     }
     p.pop();
@@ -180,8 +202,28 @@ const sketch: Sketch<SampleSketchProps> = (
     p.rect(0, 0, hPad, vPad);
     p.rect(0, p.height - vPad + 30, hPad, vPad + 30);
 
-    //
+    for (let i = 0; i < 12; i++) {
+      for (let j = 0; j < 25; j++) {
+        const hPosition = i * hGap + hStart + hGap / 2;
+        const vPosition = j * vGap + vStart;
+        if (p.dist(p.mouseX, p.mouseY, hPosition, vPosition) < 50) {
+          const guIndex = Math.floor((vPosition - vStart) / vGap) - targetY;
+          const monthIndex =
+            Math.floor((hPosition - hStart - hGap / 2) / hGap) - targetX;
+          const guName = guCodeArray[guIndex]?.nameKR;
+          const month = 202201 + monthIndex;
+          if (guName && month) {
+            currentSelection.gu = guName;
+            currentSelection.month = month;
+          }
+        }
+      }
+    }
+
+    console.log(currentSelection);
   };
+
+  p.mousePressed = () => {};
 };
 
 interface GraphProps {
