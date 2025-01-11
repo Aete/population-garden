@@ -16,6 +16,7 @@ const TableContainer = styled.div`
 `;
 
 const TableFlexContainer = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
   padding-bottom: 20px;
@@ -38,6 +39,7 @@ const TableFlexContainer = styled.div`
 `;
 const StyledTable = styled.table`
   color: white;
+  width: 100%;
 `;
 
 const StyledTh = styled.th`
@@ -45,12 +47,14 @@ const StyledTh = styled.th`
   padding: 10px;
   text-align: left;
   vertical-align: middle;
+  height: 30px;
 `;
 
 const StyledTd = styled.td`
   border-bottom: 1px solid #444;
   padding: 10px;
   font-weight: 200;
+  height: 20px;
 `;
 
 const StyleThRight = styled(StyledTh)`
