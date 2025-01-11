@@ -13,12 +13,11 @@ const Description = styled.div`
   @media (max-width: ${tablet}px) {
     grid-column: span 12;
     align-items: center;
-    width: 90%;
+    width: 100%;
   }
 `;
 
 const Container = styled.div`
-  min-height: 100vh;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(12, 1fr);

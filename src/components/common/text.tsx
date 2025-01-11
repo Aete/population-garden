@@ -23,10 +23,6 @@ export const ChapterText = styled.p`
   line-height: 160%;
   letter-spacing: 0.05em;
   color: #eee;
-
-  @media (max-width: ${tablet}px) {
-    text-align: center;
-  }
 `;
 
 export const ChapterTextKR = styled.p`
@@ -40,9 +36,6 @@ export const ChapterTextKR = styled.p`
   margin-top: 25px;
   word-break: keep-all;
 
-  @media (max-width: ${tablet}px) {
-    text-align: center;
-  }
 `;
 
 export const ChapterTextUL = styled.ul`
