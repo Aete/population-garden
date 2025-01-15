@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import Graph from "./Graph";
 import { tablet } from "../../utils/style";
-import { ChapterText, ChapterTextKR, ChapterTitle } from "../common/text";
+import { ChapterTextUL, ChapterTextULKR, ChapterTitle } from "../common/text";
 
 export interface Position {
   x: number;
@@ -133,8 +133,15 @@ export default function Dashboard(): JSX.Element {
       <ChapterTitle style={{ letterSpacing: "0.25em" }}>
         Visualization
       </ChapterTitle>
-      <ChapterText>Click arrows to navigate</ChapterText>
-      <ChapterTextKR>화살표를 눌러 대시보드를 움직여보세요</ChapterTextKR>
+      <ChapterTextUL>
+        <li>Click arrows to navigate</li>
+        <li>Click charts for more detailed information</li>
+      </ChapterTextUL>
+      <ChapterTextULKR>
+        <li>화살표를 눌러 대시보드를 움직여보세요</li>
+        <li>차트를 클릭하시면, 더 자세한 정보를 볼 수 있습니다.</li>
+      </ChapterTextULKR>
+
       <Container>
         <TopButton onClick={() => handleMove(0, 1)}>
           <svg viewBox="0 0 24 24">
