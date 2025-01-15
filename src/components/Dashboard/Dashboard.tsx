@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Graph from "./Graph";
 import { tablet } from "../../utils/style";
 import { ChapterTextUL, ChapterTextULKR, ChapterTitle } from "../common/text";
+import ColorLegend from "../common/ColorLegend";
 
 export interface Position {
   x: number;
@@ -163,7 +164,9 @@ export default function Dashboard(): JSX.Element {
             <path d="M22 12l-10 10v-6h-10v-8h10v-6z" />
           </svg>
         </RightButton>
+
         <Graph position={position} isRender={isTitleVisible} />
+        <ColorLegend />
       </Container>
     </Container>
   );
