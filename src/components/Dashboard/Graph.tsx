@@ -2,18 +2,18 @@ import { ReactP5Wrapper, P5CanvasInstance, Sketch } from "@p5-wrapper/react";
 import styled from "styled-components";
 import Flower from "../common/Flower/Flower";
 import data from "../../utils/2022_monthly.json";
-import { guCodeArray } from "../../utils/metadata";
+import { guCodeArray, monthArray } from "../../utils/metadata";
 import { useEffect, useRef, useState } from "react";
 import { Position } from "./Dashboard";
 import { tablet } from "../../utils/style";
 
-interface Demension {
+interface Dimension {
   width: number;
   height: number;
 }
 
 interface SampleSketchProps {
-  dimension: Demension;
+  dimension: Dimension;
   position: Position;
   isRender: boolean;
   [key: string]: any;
@@ -28,16 +28,36 @@ interface Selection {
   month: number;
 }
 
+interface BarChartLayout {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  paddingLeft: number;
+  paddingRight: number;
+  paddingTop: number;
+  paddingBottom: number;
+}
+
+interface BarData {
+  totalPop: number;
+  malePop: number;
+  femalePop: number;
+  coords: [number, number, number, number];
+}
+
 const sketch: Sketch<SampleSketchProps> = (
   p: P5CanvasInstance<SampleSketchProps>
 ) => {
   const flowers: FlowerData = {};
   const targetPosition: Position = { x: 0, y: 0 };
-  const currentPos: Position = { x: -1, y: -1 };
+  const currentPos: Position = { x: -1, y: 0 };
   const currentSelection: Selection = {
     gu: "",
     month: -1,
   };
+  let detailIsOpen: boolean = false;
+  let currentData: Flower;
 
   const scales = {
     large: {
@@ -69,6 +89,29 @@ const sketch: Sketch<SampleSketchProps> = (
   const flowerCount = {
     x: 0,
     y: 0,
+  };
+
+  const mouseDetection = (): Selection => {
+    const { x: targetX, y: targetY } = targetPosition;
+    const { hGap, vGap, hStart, vStart } =
+      p.width > threshold ? scales.large : scales.small;
+    let gu = "";
+    let month = -1;
+    // calculate which gu and month are selected based on the mouse position
+    for (let i = 0; i < 12; i++) {
+      for (let j = 0; j < 25; j++) {
+        const hPosition = i * hGap + hStart + hGap / 2;
+        const vPosition = j * vGap + vStart;
+        if (p.dist(p.mouseX, p.mouseY, hPosition, vPosition) < 50) {
+          const guIndex = Math.floor((vPosition - vStart) / vGap) - targetY;
+          const monthIndex =
+            Math.floor((hPosition - hStart - hGap / 2) / hGap) - targetX;
+          gu = guCodeArray[guIndex]?.nameKR;
+          month = 202201 + monthIndex;
+        }
+      }
+    }
+    return { gu, month };
   };
 
   p.setup = () => {
@@ -117,6 +160,9 @@ const sketch: Sketch<SampleSketchProps> = (
   p.draw = () => {
     const { x, y } = currentPos;
     const { x: targetX, y: targetY } = targetPosition;
+    const { gu: hoveredGu, month: hoveredMonth } = mouseDetection();
+    const { gu: selectedGu, month: selectedMonth } = currentSelection;
+
     p.background("#212121");
     const { hGap, vGap, hStart, vStart, vPad, hPad, vAxis, hAxis } =
       p.width > threshold ? scales.large : scales.small;
@@ -171,7 +217,7 @@ const sketch: Sketch<SampleSketchProps> = (
     for (let i = 0; i < 12; i++) {
       const hPosition = i * hGap + hStart + hGap / 2;
       const month = 202201 + i;
-      if (month === currentSelection.month) {
+      if ([hoveredMonth, selectedMonth].includes(month)) {
         p.fill("#fff");
       } else {
         p.fill("#aaa");
@@ -187,7 +233,7 @@ const sketch: Sketch<SampleSketchProps> = (
     p.textAlign(p.RIGHT, p.CENTER);
     for (let i = 0; i < 25; i++) {
       const guName = guCodeArray[i]?.nameKR;
-      if (guName === currentSelection.gu) {
+      if ([hoveredGu, selectedGu].includes(guName)) {
         p.fill("#fff");
       } else {
         p.fill("#aaa");
@@ -202,28 +248,167 @@ const sketch: Sketch<SampleSketchProps> = (
     p.rect(0, 0, hPad, vPad);
     p.rect(0, p.height - vPad + 30, hPad, vPad + 30);
 
-    for (let i = 0; i < 12; i++) {
-      for (let j = 0; j < 25; j++) {
-        const hPosition = i * hGap + hStart + hGap / 2;
-        const vPosition = j * vGap + vStart;
-        if (p.dist(p.mouseX, p.mouseY, hPosition, vPosition) < 50) {
-          const guIndex = Math.floor((vPosition - vStart) / vGap) - targetY;
-          const monthIndex =
-            Math.floor((hPosition - hStart - hGap / 2) / hGap) - targetX;
-          const guName = guCodeArray[guIndex]?.nameKR;
-          const month = 202201 + monthIndex;
-          if (guName && month) {
-            currentSelection.gu = guName;
-            currentSelection.month = month;
-          }
-        }
-      }
-    }
+    if (detailIsOpen && currentData !== undefined) {
+      // draw a stacked bar chart of the population data by gender
+      const data = currentData.data;
+      const layout: BarChartLayout = {
+        x: p.width - hGap * 3,
+        y: 0,
+        width: hGap * 3,
+        height: p.height,
+        paddingLeft: 50,
+        paddingRight: 0,
+        paddingTop: hAxis,
+        paddingBottom: 100,
+      };
 
-    console.log(currentSelection);
+      const chartStartX = layout.x + layout.paddingLeft;
+      const chartStartY = layout.y + layout.paddingTop + 50;
+
+      // background of the chart
+      p.fill("rgba(33, 33, 33, 0.9)");
+      p.rect(
+        layout.x,
+        layout.y,
+        layout.x + layout.width,
+        layout.y + layout.height
+      );
+      p.noStroke();
+      p.fill("#fff");
+      p.textSize(16);
+      p.textAlign(p.LEFT, p.CENTER);
+      p.text(
+        `${currentSelection.gu}  /  ${
+          monthArray[currentSelection.month - 202201]
+        }. 2022`,
+        layout.x + layout.paddingLeft - 50,
+        layout.y + layout.paddingTop
+      );
+
+      const xScaler = (value: number): number => {
+        return p.map(
+          value,
+          0,
+          1200000,
+          chartStartX,
+          layout.x + layout.width - layout.paddingRight
+        );
+      };
+
+      const yScaler = (value: number): number => {
+        return p.map(
+          value,
+          -1,
+          24,
+          chartStartY,
+          layout.y + layout.height - layout.paddingBottom
+        );
+      };
+
+      // draw the axis
+      p.noFill();
+      p.stroke("#ccc");
+      p.line(xScaler(0), yScaler(-1), xScaler(0), yScaler(24));
+      for (let i = 0; i < 24; i++) {
+        p.noStroke();
+        p.textAlign(p.RIGHT, p.CENTER);
+        p.textSize(12);
+        p.fill("#ccc");
+        p.text(i, chartStartX - 10, yScaler(i) + 2.5);
+      }
+      p.textAlign(p.LEFT, p.CENTER);
+      p.text("hour of the day", chartStartX, yScaler(24) + 20);
+
+      // draw a chart grid
+      p.drawingContext.setLineDash([3, 3]);
+      p.textAlign(p.CENTER, p.CENTER);
+      p.textSize(12);
+      p.fill("#ccc");
+      p.strokeWeight(0.5);
+      for (const number of [250000, 500000, 1000000]) {
+        p.stroke("#ccc");
+        p.line(xScaler(number), yScaler(-1), xScaler(number), yScaler(24));
+        p.noStroke();
+        p.text(number.toLocaleString(), xScaler(number), yScaler(-1));
+      }
+      p.drawingContext.setLineDash([]);
+
+      // draw the bars
+      p.noStroke();
+      const bars: BarData[] = [];
+      data.forEach((d, i) => {
+        const male = d[1];
+        const female = d[2];
+        p.fill("#aaa");
+        p.rectMode(p.CORNERS);
+        // male
+        p.rect(xScaler(0), yScaler(i), xScaler(male), yScaler(i) + 5);
+        // female
+        p.fill("#fff");
+        p.rect(
+          xScaler(male),
+          yScaler(i),
+          xScaler(female) + xScaler(male) - xScaler(0),
+          yScaler(i) + 5
+        );
+        p.rectMode(p.CORNER);
+        bars.push({
+          totalPop: d[0],
+          malePop: d[1],
+          femalePop: d[2],
+          coords: [
+            xScaler(0),
+            yScaler(i),
+            xScaler(female) + xScaler(male) - xScaler(0),
+            yScaler(i) + 5,
+          ],
+        });
+      });
+      bars.forEach((bar, i) => {
+        if (
+          p.mouseX > bar.coords[0] &&
+          p.mouseX < bar.coords[2] &&
+          p.mouseY > bar.coords[1] &&
+          p.mouseY < bar.coords[3]
+        ) {
+          p.noStroke();
+          p.fill("rgba(21,21,21,0.7)");
+          p.rect(p.mouseX + 20, p.mouseY, 200, 90);
+          p.fill("#fff");
+          p.textSize(12);
+          p.textAlign(p.LEFT, p.CENTER);
+          p.text(`at ${i}:00`, p.mouseX + 30, p.mouseY + 15);
+          p.text(
+            `total: ${bar.totalPop.toLocaleString()}`,
+            p.mouseX + 30,
+            p.mouseY + 40
+          );
+          p.text(
+            `male: ${bar.malePop.toLocaleString()}`,
+            p.mouseX + 30,
+            p.mouseY + 60
+          );
+          p.text(
+            `female: ${bar.femalePop.toLocaleString()}`,
+            p.mouseX + 30,
+            p.mouseY + 80
+          );
+        }
+      });
+    }
   };
 
-  p.mousePressed = () => {};
+  p.mousePressed = () => {
+    const { gu, month } = mouseDetection();
+    currentSelection.gu = gu;
+    currentSelection.month = month;
+    if (gu !== "" || month !== -1) {
+      detailIsOpen = true;
+      currentData = flowers[gu].find((f) => f.month === month) as Flower;
+    } else {
+      detailIsOpen = false;
+    }
+  };
 };
 
 interface GraphProps {
@@ -248,7 +433,7 @@ const Container = styled.div`
 
 export default function Graph({ position, isRender }: GraphProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimension, setDimension] = useState<Demension>({
+  const [dimension, setDimension] = useState<Dimension>({
     width: 0,
     height: 0,
   });
