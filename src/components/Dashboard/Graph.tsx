@@ -281,7 +281,7 @@ const sketch: Sketch<SampleSketchProps> = (
         `${currentSelection.gu}  /  ${
           monthArray[currentSelection.month - 202201]
         }. 2022`,
-        layout.x + layout.paddingLeft - 50,
+        layout.x + layout.paddingLeft - 20,
         layout.y + layout.paddingTop
       );
 
@@ -332,6 +332,50 @@ const sketch: Sketch<SampleSketchProps> = (
         p.text(number.toLocaleString(), xScaler(number), yScaler(-1));
       }
       p.drawingContext.setLineDash([]);
+
+      // create a close button
+      p.fill("#212121");
+      p.stroke("#fff");
+      p.rect(
+        currentSelection.gu.length * 15 + layout.x + 75,
+        layout.y + layout.paddingTop - 10,
+        40,
+        20
+      );
+      p.fill("#fff");
+      p.noStroke();
+      p.textSize(12);
+      p.textAlign(p.CENTER, p.CENTER);
+      p.text(
+        "close",
+        currentSelection.gu.length * 15 + layout.x + 75 + 20,
+        layout.y + layout.paddingTop
+      );
+
+      // close button hover and click effect
+      if (
+        p.mouseX > currentSelection.gu.length * 15 + layout.x + 75 &&
+        p.mouseX < currentSelection.gu.length * 15 + layout.x + 75 + 40 &&
+        p.mouseY > layout.y + layout.paddingTop - 10 &&
+        p.mouseY < layout.y + layout.paddingTop + 10
+      ) {
+        p.fill("#fff");
+        p.rect(
+          currentSelection.gu.length * 15 + layout.x + 75,
+          layout.y + layout.paddingTop - 10,
+          40,
+          20
+        );
+        p.fill("#212121");
+        p.text(
+          "close",
+          currentSelection.gu.length * 15 + layout.x + 75 + 20,
+          layout.y + layout.paddingTop
+        );
+        if (p.mouseIsPressed) {
+          detailIsOpen = false;
+        }
+      }
 
       // draw the bars
       p.noStroke();
@@ -399,6 +443,14 @@ const sketch: Sketch<SampleSketchProps> = (
   };
 
   p.mousePressed = () => {
+    if (
+      p.mouseX < 50 ||
+      p.mouseX > p.width - 50 ||
+      p.mouseY < +50 ||
+      p.mouseY > p.height - 50
+    ) {
+      return;
+    }
     const { gu, month } = mouseDetection();
     currentSelection.gu = gu;
     currentSelection.month = month;

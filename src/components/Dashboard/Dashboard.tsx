@@ -99,8 +99,10 @@ export default function Dashboard(): JSX.Element {
   const [isTitleVisible, setIsTitleVisible] = useState(false);
   const titleRef = useRef<HTMLDivElement>(null);
 
-  const handleMove = (x: number, y: number) => {
+  const handleMove = (x: number, y: number, e: React.MouseEvent) => {
+    e.preventDefault();
     setPosition({ x: position.x + x, y: position.y + y });
+    e.stopPropagation();
   };
 
   useEffect(() => {
@@ -144,22 +146,22 @@ export default function Dashboard(): JSX.Element {
       </ChapterTextULKR>
 
       <Container>
-        <TopButton onClick={() => handleMove(0, 1)}>
+        <TopButton onClick={(e) => handleMove(0, 1, e)}>
           <svg viewBox="0 0 24 24">
             <path d="M12 2l-10 10h6v10h8v-10h6z" />
           </svg>
         </TopButton>
-        <LeftButton onClick={() => handleMove(1, 0)}>
+        <LeftButton onClick={(e) => handleMove(1, 0, e)}>
           <svg viewBox="0 0 24 24">
             <path d="M2 12l10-10v6h10v8h-10v6z" />
           </svg>
         </LeftButton>
-        <BottomButton onClick={() => handleMove(0, -1)}>
+        <BottomButton onClick={(e) => handleMove(0, -1, e)}>
           <svg viewBox="0 0 24 24">
             <path d="M12 22l10-10h-6v-10h-8v10h-6z" />
           </svg>
         </BottomButton>
-        <RightButton onClick={() => handleMove(-1, 0)}>
+        <RightButton onClick={(e) => handleMove(-1, 0, e)}>
           <svg viewBox="0 0 24 24">
             <path d="M22 12l-10 10v-6h-10v-8h10v-6z" />
           </svg>
