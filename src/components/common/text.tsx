@@ -35,7 +35,6 @@ export const ChapterTextKR = styled.p`
   color: #eee;
   margin-top: 25px;
   word-break: keep-all;
-
 `;
 
 export const ChapterTextUL = styled.ul`
@@ -55,6 +54,7 @@ export const ChapterTextUL = styled.ul`
   @media (max-width: ${tablet}px) {
     font-size: 17px;
     margin-left: 40px;
+    width: calc(100% - 20px);
   }
 `;
 
@@ -97,5 +97,6 @@ export const ChapterTextULKR = styled.ul`
   @media (max-width: ${tablet}px) {
     font-size: 17px;
     margin-left: 40px;
+    width: calc(100% - 20px);
   }
 `;

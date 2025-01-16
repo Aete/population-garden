@@ -10,6 +10,7 @@ const LegendContainer = styled.div`
   top: 30px;
   right: 10px;
   z-index: 2;
+  width: 150px;
 
   @media screen and (max-width: ${tablet}px) {
     top: 15px;

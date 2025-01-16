@@ -252,9 +252,9 @@ const sketch: Sketch<SampleSketchProps> = (
       // draw a stacked bar chart of the population data by gender
       const data = currentData.data;
       const layout: BarChartLayout = {
-        x: p.width - hGap * 3,
+        x: p.width - hGap * 3 - 50,
         y: 0,
-        width: hGap * 3,
+        width: hGap * 3 + 50,
         height: p.height,
         paddingLeft: 50,
         paddingRight: 0,
@@ -334,46 +334,31 @@ const sketch: Sketch<SampleSketchProps> = (
       p.drawingContext.setLineDash([]);
 
       // create a close button
+      const closeBtnStartX = currentSelection.gu.length * 12 + layout.x + 110;
       p.fill("#212121");
       p.stroke("#fff");
-      p.rect(
-        currentSelection.gu.length * 15 + layout.x + 75,
-        layout.y + layout.paddingTop - 10,
-        40,
-        20
-      );
+      p.rect(closeBtnStartX, layout.y + layout.paddingTop - 10, 40, 20);
       p.fill("#fff");
       p.noStroke();
       p.textSize(12);
       p.textAlign(p.CENTER, p.CENTER);
-      p.text(
-        "close",
-        currentSelection.gu.length * 15 + layout.x + 75 + 20,
-        layout.y + layout.paddingTop
-      );
+      p.text("close", closeBtnStartX + 20, layout.y + layout.paddingTop);
 
       // close button hover and click effect
       if (
-        p.mouseX > currentSelection.gu.length * 15 + layout.x + 75 &&
-        p.mouseX < currentSelection.gu.length * 15 + layout.x + 75 + 40 &&
+        p.mouseX > closeBtnStartX &&
+        p.mouseX < closeBtnStartX + 40 &&
         p.mouseY > layout.y + layout.paddingTop - 10 &&
         p.mouseY < layout.y + layout.paddingTop + 10
       ) {
         p.fill("#fff");
-        p.rect(
-          currentSelection.gu.length * 15 + layout.x + 75,
-          layout.y + layout.paddingTop - 10,
-          40,
-          20
-        );
+        p.rect(closeBtnStartX, layout.y + layout.paddingTop - 10, 40, 20);
         p.fill("#212121");
-        p.text(
-          "close",
-          currentSelection.gu.length * 15 + layout.x + 75 + 20,
-          layout.y + layout.paddingTop
-        );
+        p.text("close", closeBtnStartX + 20, layout.y + layout.paddingTop);
         if (p.mouseIsPressed) {
           detailIsOpen = false;
+          currentSelection.gu = "";
+          currentSelection.month = -1;
         }
       }
 
@@ -443,11 +428,12 @@ const sketch: Sketch<SampleSketchProps> = (
   };
 
   p.mousePressed = () => {
+    const { hPad, vPad } = p.width > threshold ? scales.large : scales.small;
     if (
-      p.mouseX < 50 ||
-      p.mouseX > p.width - 50 ||
-      p.mouseY < +50 ||
-      p.mouseY > p.height - 50
+      p.mouseX < hPad ||
+      p.mouseX > p.width - hPad ||
+      p.mouseY < vPad ||
+      p.mouseY > p.height - vPad
     ) {
       return;
     }
