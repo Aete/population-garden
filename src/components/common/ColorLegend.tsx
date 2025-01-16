@@ -21,7 +21,7 @@ export default function ColorLegend(): JSX.Element {
   const legendHeight = 8;
   const cScale = d3
     .scaleDiverging(d3.interpolateRdBu)
-    .domain([0.45, 0.5, 0.55]);
+    .domain([0.55, 0.5, 0.45]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
