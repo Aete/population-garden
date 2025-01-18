@@ -1,8 +1,12 @@
 import { ReactP5Wrapper, P5CanvasInstance, Sketch } from "@p5-wrapper/react";
 import styled from "styled-components";
 import Flower from "../common/Flower/Flower";
-import data from "../../utils/2022_monthly.json";
-import { guCodeArray, monthArray } from "../../utils/metadata";
+import data from "../../utils/monthly.json";
+import {
+  guCodeArray,
+  monthArray,
+  targetMonthArray,
+} from "../../utils/metadata";
 import { useEffect, useRef, useState } from "react";
 import { Position } from "./Dashboard";
 import { tablet } from "../../utils/style";
@@ -98,8 +102,8 @@ const sketch: Sketch<SampleSketchProps> = (
     let gu = "";
     let month = -1;
     // calculate which gu and month are selected based on the mouse position
-    for (let i = 0; i < 12; i++) {
-      for (let j = 0; j < 25; j++) {
+    for (let i = 0; i < flowerCount.x + 1; i++) {
+      for (let j = 0; j < flowerCount.y + 1; j++) {
         const hPosition = i * hGap + hStart + hGap / 2;
         const vPosition = j * vGap + vStart;
         if (p.dist(p.mouseX, p.mouseY, hPosition, vPosition) < 50) {
@@ -107,7 +111,7 @@ const sketch: Sketch<SampleSketchProps> = (
           const monthIndex =
             Math.floor((hPosition - hStart - hGap / 2) / hGap) - targetX;
           gu = guCodeArray[guIndex]?.nameKR;
-          month = 202201 + monthIndex;
+          month = targetMonthArray[monthIndex];
         }
       }
     }
@@ -135,7 +139,8 @@ const sketch: Sketch<SampleSketchProps> = (
       data.forEach((d) => {
         const guName = guCodeArray.find((gu) => gu.code === d.gu)?.nameKR;
         const guIndex = guCodeArray.findIndex((gu) => gu.code === d.gu);
-        const x = (d.month - 202201) * hGap + hStart + hGap / 2;
+        const monthIndex = targetMonthArray.findIndex((m) => m === d.month);
+        const x = monthIndex * hGap + hStart + hGap / 2;
         const y = Math.floor(guIndex) * vGap + vStart;
         if (guName) {
           flowers[guName].push(
@@ -147,7 +152,8 @@ const sketch: Sketch<SampleSketchProps> = (
               false,
               width > tablet ? scales.large.scale : scales.small.scale,
               d.month,
-              guIndex
+              guIndex,
+              monthIndex
             )
           );
         }
@@ -169,7 +175,7 @@ const sketch: Sketch<SampleSketchProps> = (
     p.push();
     p.translate(x * hGap, y * vGap);
     // draw grid - vertical
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 24; i++) {
       p.stroke("#636363");
       const hPosition = i * hGap + hStart + hGap / 2;
       p.line(hPosition, 0, hPosition, vGap * 26);
@@ -177,17 +183,18 @@ const sketch: Sketch<SampleSketchProps> = (
     // draw grid - horizontal
     for (let i = 0; i < 25; i++) {
       p.stroke("#636363");
-      p.line(hStart - hGap, i * vGap + vStart, hGap * 13, i * vGap + vStart);
+      p.line(hStart - hGap, i * vGap + vStart, hGap * 25, i * vGap + vStart);
     }
     // draw the flowers
     for (const key in flowers) {
-      const startMonth = 202201 - targetX;
+      console.log(targetX);
+      const startMonthIndex = -targetX;
       const startGuIndex = -1 * targetY;
       flowers[key].forEach((f) => {
         if (Math.abs(startGuIndex - f.guIndex) > flowerCount.y + 1) {
           return;
         }
-        if (Math.abs(startMonth - f.month) < flowerCount.x + 1) {
+        if (Math.abs(startMonthIndex - f.monthIndex) < flowerCount.x + 1) {
           f.display(p as P5CanvasInstance);
         }
       });
@@ -214,9 +221,9 @@ const sketch: Sketch<SampleSketchProps> = (
     p.textSize(13);
     p.textAlign(p.CENTER, p.CENTER);
 
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 25; i++) {
       const hPosition = i * hGap + hStart + hGap / 2;
-      const month = 202201 + i;
+      const month = targetMonthArray[i];
       if ([hoveredMonth, selectedMonth].includes(month)) {
         p.fill("#fff");
       } else {
@@ -279,8 +286,12 @@ const sketch: Sketch<SampleSketchProps> = (
       p.textAlign(p.LEFT, p.CENTER);
       p.text(
         `${currentSelection.gu}  /  ${
-          monthArray[currentSelection.month - 202201]
-        }. 2022`,
+          monthArray[
+            currentSelection.month > 202212
+              ? currentSelection.month - 202301
+              : currentSelection.month - 202201
+          ]
+        }. ${currentSelection.month > 202212 ? 2023 : 2022}`,
         layout.x + layout.paddingLeft - 20,
         layout.y + layout.paddingTop
       );
@@ -431,7 +442,7 @@ const sketch: Sketch<SampleSketchProps> = (
     const { hPad, vPad } = p.width > threshold ? scales.large : scales.small;
     if (
       p.mouseX < hPad ||
-      p.mouseX > p.width - hPad ||
+      p.mouseX > p.width ||
       p.mouseY < vPad ||
       p.mouseY > p.height - vPad
     ) {

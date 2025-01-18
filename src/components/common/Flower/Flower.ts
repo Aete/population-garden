@@ -19,7 +19,8 @@ export default class Flower {
     public textRender: boolean = true,
     public scale: number = 0.00008,
     public month: number = -1, // -1 for null value
-    public guIndex: number = -1
+    public guIndex: number = -1, // -1 for null value
+    public monthIndex: number = -1 // -1 for null value
   ) {}
 
   private rScale(d: number): number {
