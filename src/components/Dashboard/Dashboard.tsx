@@ -100,9 +100,9 @@ export default function Dashboard(): JSX.Element {
   const titleRef = useRef<HTMLDivElement>(null);
 
   const handleMove = (x: number, y: number, e: React.MouseEvent) => {
+    e.stopPropagation();
     e.preventDefault();
     setPosition({ x: position.x + x, y: position.y + y });
-    e.stopPropagation();
   };
 
   useEffect(() => {
