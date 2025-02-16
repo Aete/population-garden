@@ -24,7 +24,7 @@ const CornerButton = styled.button`
   position: absolute;
   width: 50px;
   height: 50px;
-  background-color: transparent;
+  background-color: #212121;
   border: 1px solid #fff;
   border-radius: 50%;
   z-index: 2;
@@ -53,6 +53,7 @@ const TopButton = styled(CornerButton)`
   top: 30px;
   left: 50%;
   transform: translateX(-50%);
+
   &:active {
     transform: scale(0.9) translateX(-55%);
   }
@@ -100,7 +101,7 @@ export default function Dashboard(): JSX.Element {
   const titleRef = useRef<HTMLDivElement>(null);
 
   const handleMove = (x: number, y: number, e: React.MouseEvent) => {
-    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
     e.preventDefault();
     setPosition({ x: position.x + x, y: position.y + y });
   };

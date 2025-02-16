@@ -448,6 +448,10 @@ const sketch: Sketch<SampleSketchProps> = (
     ) {
       return;
     }
+
+    if (p.mouseX <= 70 || p.mouseX >= p.width - 70) {
+      return;
+    }
     const { gu, month } = mouseDetection();
     currentSelection.gu = gu;
     currentSelection.month = month;
