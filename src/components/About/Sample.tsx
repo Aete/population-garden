@@ -37,7 +37,6 @@ const sketch: Sketch<SampleSketchProps> = (
       let numFlowers = innerWidth > tablet ? numColumn * 5 : numColumn;
       flowers = {};
       p.resizeCanvas(width, height);
-      p.background("#212121");
       data
         .filter((d) => d.month === 202211)
         .slice(0, numFlowers)
