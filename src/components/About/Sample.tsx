@@ -25,9 +25,14 @@ const sketch: Sketch<SampleSketchProps> = (
   p: P5CanvasInstance<SampleSketchProps>
 ) => {
   let flowers: FlowerData = {};
+  let canvasSize: Demension = { width: 0, height: 0 };
+  let isSetup = false;
+
   p.setup = () => {
-    p.createCanvas(0, 0);
-    p.background("#212121");
+    // updateWithProps can run before setup, so use the size it stored
+    p.createCanvas(canvasSize.width, canvasSize.height);
+    p.noLoop();
+    isSetup = true;
   };
 
   p.updateWithProps = ({ dimension }: SampleSketchProps) => {
@@ -36,7 +41,7 @@ const sketch: Sketch<SampleSketchProps> = (
       const numColumn: number = width > 600 ? 5 : 3;
       let numFlowers = innerWidth > tablet ? numColumn * 5 : numColumn;
       flowers = {};
-      p.resizeCanvas(width, height);
+      canvasSize = { width, height };
       data
         .filter((d) => d.month === 202211)
         .slice(0, numFlowers)
@@ -58,14 +63,19 @@ const sketch: Sketch<SampleSketchProps> = (
           }
         });
     }
+    // the renderer doesn't exist until setup has run; setup draws once itself
+    if (isSetup) {
+      // resizeCanvas clears the canvas and triggers a redraw
+      p.resizeCanvas(canvasSize.width, canvasSize.height);
+    }
+  };
+
+  p.draw = () => {
+    p.clear();
     for (const key in flowers) {
       flowers[key].display(p as P5CanvasInstance);
     }
-
-    p.noLoop();
   };
-
-  p.draw = () => {};
 };
 
 const Container = styled.div`
